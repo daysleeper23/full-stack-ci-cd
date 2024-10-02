@@ -1,4 +1,4 @@
-const { test, describe, expect, beforeEach } = require('@playwright/test')
+const { test, describe, expect } = require('@playwright/test')
 const baseURL = 'http://localhost:8080/'
 
 describe('Pokedex', () => {
