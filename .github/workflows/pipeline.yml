@@ -19,15 +19,15 @@ jobs:
         run: echo "${{ !contains(github.event.head_commit.message, '#skip') }}"
       - name: push to main event?
         run: echo "${{ github.event_name == 'push' }}"
-      - name: creating NO_SKIP
+      - name: creating DEPLOY_RELEASE_FLAG
         run: |
           if [[ "${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}" == "true" ]]; then
-            echo "NO_SKIP=true" >> $GITHUB_ENV
+            echo "DEPLOY_RELEASE_FLAG=true" >> $GITHUB_ENV
           else
-            echo "NO_SKIP=false" >> $GITHUB_ENV
+            echo "DEPLOY_RELEASE_FLAG=false" >> $GITHUB_ENV
           fi
       - name: NO_SKIP = 
-        run: echo "${{ env.NO_SKIP }}"
+        run: echo "${{ env.DEPLOY_RELEASE_FLAG }}"
       - name: install dependencies
         run: npm install
       - name: lint
@@ -47,12 +47,12 @@ jobs:
           path: playwright-report/
           retention-days: 30
       - name: Trigger Render deployment
-        if: ${{ env.NO_SKIP == 'true' }}
+        if: ${{ env.DEPLOY_RELEASE_FLAG == 'true' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
     
   tag_release:
     needs: [simple_deployment_pipeline]
-    if: ${{ github.ref == 'refs/heads/main' && github.env.NO_SKIP == 'true' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.env.DEPLOY_RELEASE_FLAG == 'true' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
