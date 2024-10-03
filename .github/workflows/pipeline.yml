@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Output NO_SKIP
+      - name: NO_SKIP = 
         run: 'echo "${{ env.NO_SKIP }}"'
   #     - name: install dependencies
   #       run: npm install
