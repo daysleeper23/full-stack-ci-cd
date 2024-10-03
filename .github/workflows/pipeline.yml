@@ -39,14 +39,14 @@ jobs:
         if: ${{ env.DEPLOY_FLAG == 'true' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
       - name: The job has succeeded
-        uses: rjstone/discord-webhook-notify@v1.0.2
+        uses: rjstone/discord-webhook-notify@v1
         if: ${{ env.DEPLOY_FLAG == 'true' && success() }}
         with:
           severity: info
           details: Test Succeeded!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Deploy Failed
-        uses: rjstone/discord-webhook-notify@v1.0.2
+        uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
           severity: error
@@ -75,7 +75,7 @@ jobs:
         if: ${{ env.RELEASE_FLAG == 'true' }}
         run: 'echo "New Tag: ${{ env.new_tag }}"'
       - name: Release Failed
-        uses: rjstone/discord-webhook-notify@v1.0.2
+        uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
           severity: error
