@@ -44,14 +44,14 @@ jobs:
         with:
           severity: info
           details: Test Succeeded!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
       - name: Deploy Failed
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
           severity: error
           details: Test & Deploy Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
   tag_release:
     env:
       RELEASE_FLAG: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
@@ -80,4 +80,4 @@ jobs:
         with:
           severity: error
           details: Bumping The Tag Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
