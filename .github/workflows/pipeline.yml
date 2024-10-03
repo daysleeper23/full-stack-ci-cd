@@ -18,8 +18,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: contain
+        run: echo "${{ contains(github.event.head_commit.message, '#skip') }}"
       - name: NO_SKIP = 
-        run: 'echo "${{ env.NO_SKIP }}"'
+        run: echo "${{ env.NO_SKIP }}"
   #     - name: install dependencies
   #       run: npm install
   #     - name: lint
