@@ -26,7 +26,7 @@ jobs:
           else
             echo "DEPLOY_RELEASE_FLAG=false" >> $GITHUB_ENV
           fi
-      - name: NO_SKIP = 
+      - name: DEPLOY_RELEASE_FLAG = 
         run: echo "${{ env.DEPLOY_RELEASE_FLAG }}"
       - name: install dependencies
         run: npm install
