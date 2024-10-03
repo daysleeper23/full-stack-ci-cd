@@ -51,6 +51,8 @@ jobs:
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
     
   tag_release:
+    env:
+      DEPLOY_RELEASE_FLAG: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
     needs: [simple_deployment_pipeline]
     if: ${{ github.ref == 'refs/heads/main' && github.env.DEPLOY_RELEASE_FLAG == 'true' }}
     runs-on: ubuntu-20.04
