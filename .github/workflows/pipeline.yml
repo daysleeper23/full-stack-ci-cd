@@ -39,25 +39,25 @@ jobs:
         if: ${{ env.DEPLOY_FLAG == 'true' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
       - name: The job has succeeded
-        # uses: rjstone/discord-webhook-notify@v1
+        uses: rjstone/discord-webhook-notify@v1
         if: ${{ env.DEPLOY_FLAG == 'true' && success() }}
-        # with:
-        #   severity: info
-        #   details: Test Succeeded!
-        #   webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
-        run: |
-          RESPONSE=$(curl -s -o "%{http_code}" -X POST \
-          -H "Content-Type: application/json" \
-          -d '{"content": "Test & Deploy Failed!"}' \
-          ${{ secrets.DISCORD_WEBHOOK }})
-          echo "HTTP Response: $RESPONSE"
+        with:
+          severity: info
+          details: Test Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+        # run: |
+        #   RESPONSE=$(curl -s -o "%{http_code}" -X POST \
+        #   -H "Content-Type: application/json" \
+        #   -d '{"content": "Test & Deploy Failed!"}' \
+        #   ${{ secrets.DISCORD_WEBHOOK }})
+        #   echo "HTTP Response: $RESPONSE"
       - name: Deploy Failed
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
           severity: error
           details: Test & Deploy Failed!
-          webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
     env:
       RELEASE_FLAG: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
@@ -86,4 +86,4 @@ jobs:
         with:
           severity: error
           details: Bumping The Tag Failed!
-          webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
