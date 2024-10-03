@@ -36,12 +36,20 @@ jobs:
       - name: Trigger Render deployment
         if: ${{ github.event_name == 'push' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+    
   tag_release:
     needs: [simple_deployment_pipeline]
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v4
       - name: Bump version and push tag
         if: ${{ github.event_name == 'push' }}
         uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          PRERELEASE: true
+          DEFAULT_BUMP: patch
+      - name: Output new tag
+        run: 'echo "New Tag: ${{ steps.tag_version.outputs.new_tag }}"'
