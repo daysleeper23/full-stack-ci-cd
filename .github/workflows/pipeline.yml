@@ -1,8 +1,5 @@
 name: Test & Deployment pipeline
 
-env:
-  NO_SKIP: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
-
 on:
   push:
     branches:
