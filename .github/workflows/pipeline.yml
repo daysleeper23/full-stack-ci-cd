@@ -40,6 +40,7 @@ jobs:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v4
       - name: Bump version and push tag
         if: ${{ github.event_name == 'push' }}
         uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
@@ -48,3 +49,5 @@ jobs:
           WITH_V: true
           PRERELEASE: true
           DEFAULT_BUMP: patch
+      - name: Output new tag
+        run: 'echo "New Tag: ${{ steps.tag_version.outputs.new_tag }}"'
