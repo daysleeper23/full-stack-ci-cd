@@ -1,7 +1,7 @@
 name: Deployment pipeline
 
 env:
-  SKIP: ${{ contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
+  NO_SKIP: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
 
 on:
   push:
@@ -37,12 +37,12 @@ jobs:
           path: playwright-report/
           retention-days: 30
       - name: Trigger Render deployment
-        if: ${{ github.env.SKIP == 'false' }}
+        if: ${{ github.env.NO_SKIP == 'true' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
     
   tag_release:
     needs: [simple_deployment_pipeline]
-    if: ${{ github.ref == 'refs/heads/main' && github.env.SKIP == 'false' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.env.NO_SKIP == 'true' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
