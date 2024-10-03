@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: contain "#skip"?
+      - name: not contain "#skip"?
         run: echo "${{ !contains(github.event.head_commit.message, '#skip') }}"
       - name: push to main event?
         run: echo "${{ github.event_name == 'push' }}"
