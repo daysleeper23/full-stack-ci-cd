@@ -46,10 +46,11 @@ jobs:
         #   details: Test Succeeded!
         #   webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
         run: |
-          curl -X POST \
+          RESPONSE=$(curl -s -o "%{http_code}" -X POST \
           -H "Content-Type: application/json" \
-          -d '{"content": "Test & Deploy Success!"}' \
-          ${{ secrets.DISCORD_WEBHOOK }}
+          -d '{"content": "Test & Deploy Failed!"}' \
+          ${{ secrets.DISCORD_WEBHOOK }})
+          echo "HTTP Response: $RESPONSE"
       - name: Deploy Failed
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
