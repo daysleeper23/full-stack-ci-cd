@@ -42,12 +42,11 @@ jobs:
     
   tag_release:
     needs: [simple_deployment_pipeline]
-    if: github.ref == 'refs/heads/main'
+    if: ${{ github.ref == 'refs/heads/main' && github.env.SKIP == 'false' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
       - name: Bump version and push tag
-        if: ${{ github.env.SKIP == 'false' }}
         uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
