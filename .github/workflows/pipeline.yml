@@ -39,12 +39,17 @@ jobs:
         if: ${{ env.DEPLOY_FLAG == 'true' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
       - name: The job has succeeded
-        uses: rjstone/discord-webhook-notify@v1
+        # uses: rjstone/discord-webhook-notify@v1
         if: ${{ env.DEPLOY_FLAG == 'true' && success() }}
-        with:
-          severity: info
-          details: Test Succeeded!
-          webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
+        # with:
+        #   severity: info
+        #   details: Test Succeeded!
+        #   webhookUrl: "${{ secrets.DISCORD_WEBHOOK }}"
+        run: |
+          curl -X POST \
+          -H "Content-Type: application/json" \
+          -d '{"content": "Test & Deploy Success!"}' \
+          ${{ secrets.DISCORD_WEBHOOK }}
       - name: Deploy Failed
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
