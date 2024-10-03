@@ -20,6 +20,8 @@ jobs:
           node-version: '20'
       - name: contain
         run: echo "${{ contains(github.event.head_commit.message, '#skip') }}"
+      - name: event
+        run: echo "${{ github.event_name == 'push' }}"
       - name: NO_SKIP = 
         run: echo "${{ env.NO_SKIP }}"
   #     - name: install dependencies
