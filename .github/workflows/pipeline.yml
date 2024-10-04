@@ -42,7 +42,7 @@ jobs:
         uses: stegzilla/discord-notify@v4
         if: ${{ env.DEPLOY_FLAG == 'true' && success() }}
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex - Test & Deploy Succeeded!
           include_image: true
           username: GitHub PR Notifier
@@ -50,11 +50,10 @@ jobs:
         uses: stegzilla/discord-notify@v4
         if: failure()
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex - Test & Deploy Failed!
           include_image: true
           username: GitHub PR Notifier
-          
   tag_release:
     env:
       RELEASE_FLAG: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
@@ -81,7 +80,24 @@ jobs:
         uses: stegzilla/discord-notify@v4
         if: failure()
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex - Versioning Failed!
           include_image: true
           username: GitHub PR Notifier
+  health_check:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v4
+        with:
+          # Check the following URLs one by one sequentially
+          url: https://full-stack-open-pokedex-en3r.onrender.com/health-dex
+          # Follow redirects, or just report success on 3xx status codes
+          follow-redirect: false # Optional, defaults to "false"
+          # Fail this action after this many failed attempts
+          max-attempts: 3 # Optional, defaults to 1
+          # Delay between retries
+          retry-delay: 5s # Optional, only applicable to max-attempts > 1
+          # Retry all errors, including 404. This option might trigger curl upgrade.
+          retry-all: false
