@@ -44,7 +44,7 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex Pipeline Notification
-          message: "Test & Deploy Succeeded! FYI: ${{ github.event.pull_request.html_url }}"
+          message: "Test & Deploy Succeeded! These are the changes: **${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}**"
           include_image: true
           username: GitHub PR Notifier
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
@@ -54,7 +54,7 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex Pipeline Notification
-          message: "Test & Deploy Failed! Check this PR: ${{ github.event.pull_request.html_url }}"
+          message: "Test & Deploy Failed! Check this build: **${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}**"
           include_image: true
           username: GitHub PR Notifier
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
@@ -86,7 +86,7 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex - Versioning Failed!
-          message: "Test & Deploy Failed! Check this PR: ${{ github.event.pull_request.html_url }}"
+          message: "Release Failed! Check this build: **${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}**"
           include_image: true
           username: GitHub PR Notifier
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
