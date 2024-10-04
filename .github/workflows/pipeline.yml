@@ -85,6 +85,7 @@ jobs:
           include_image: true
           username: GitHub PR Notifier
   health_check:
+    needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
       - name: Check the deployed service URL
