@@ -38,26 +38,23 @@ jobs:
       - name: Trigger Render deployment
         if: ${{ env.DEPLOY_FLAG == 'true' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-      - name: The job has succeeded
-        uses: rjstone/discord-webhook-notify@v1
+      - name: Discord Notify - Success
+        uses: stegzilla/discord-notify@v4
         if: ${{ env.DEPLOY_FLAG == 'true' && success() }}
         with:
-          severity: info
-          details: Test Succeeded!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-        # run: |
-        #   RESPONSE=$(curl -s -o "%{http_code}" -X POST \
-        #   -H "Content-Type: application/json" \
-        #   -d '{"content": "Test & Deploy Failed!"}' \
-        #   ${{ secrets.DISCORD_WEBHOOK }})
-        #   echo "HTTP Response: $RESPONSE"
-      - name: Deploy Failed
-        uses: rjstone/discord-webhook-notify@v1
+          title: Pokedex - Test & Deploy Succeeded!
+          include_image: true
+          username: GitHub PR Notifier
+      - name: Discord Notify - Failure
+        uses: stegzilla/discord-notify@v4
         if: failure()
         with:
-          severity: error
-          details: Test & Deploy Failed!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Pokedex - Test & Deploy Failed!
+          include_image: true
+          username: GitHub PR Notifier
+          
   tag_release:
     env:
       RELEASE_FLAG: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
@@ -80,10 +77,11 @@ jobs:
       - name: Output new tag
         if: ${{ env.RELEASE_FLAG == 'true' }}
         run: 'echo "New Tag: ${{ env.new_tag }}"'
-      - name: Release Failed
-        uses: rjstone/discord-webhook-notify@v1
+      - name: Discord Notify - Failure
+        uses: stegzilla/discord-notify@v4
         if: failure()
         with:
-          severity: error
-          details: Bumping The Tag Failed!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Pokedex - Versioning Failed!
+          include_image: true
+          username: GitHub PR Notifier
