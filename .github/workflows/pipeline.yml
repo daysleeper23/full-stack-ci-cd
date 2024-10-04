@@ -44,18 +44,20 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex Pipeline Notification
-          message: Test & Deploy Succeeded!
+          message: "Test & Deploy Succeeded! FYI: ${{ github.event.pull_request.html_url }}"
           include_image: true
           username: GitHub PR Notifier
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
       - name: Discord Notify - Failure
         uses: stegzilla/discord-notify@v4
         if: failure()
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex Pipeline Notification
-          message: "Test & Deploy Failed! Check this commit: ${{ github.sha}}"
+          message: "Test & Deploy Failed! Check this PR: ${{ github.event.pull_request.html_url }}"
           include_image: true
           username: GitHub PR Notifier
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
   tag_release:
     env:
       RELEASE_FLAG: ${{ !contains(github.event.head_commit.message, '#skip') && github.event_name == 'push' }}
@@ -84,9 +86,10 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Pokedex - Versioning Failed!
-          message: "Test & Deploy Failed! Check this commit: ${{ github.sha}}"
+          message: "Test & Deploy Failed! Check this PR: ${{ github.event.pull_request.html_url }}"
           include_image: true
           username: GitHub PR Notifier
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
   health_check:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
